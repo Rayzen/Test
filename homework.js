@@ -52,7 +52,7 @@ Point.prototype.membership = function (eqFunction){
 };
 
 Point.prototype.getDistanceFromPoint = function(point) {
-  return sqrt(pow(point.y - this.y, 2) + pow(point.x - this.y, 2));
+  return sqrt(pow(point.y - this.y, 2) + pow(point.x - this.x, 2));
 };
 
 Point.prototype.getDistanceFromLine = function (line){
@@ -74,40 +74,19 @@ Point.prototype.getDistance = function (x){
 
 var Triangle = function (p1, p2, p3) {
 
-  /*
-  
-  this.p1 = p1;
-  this.p2 = p2;
-  this.p3 = p3;
-  
-  this.l1 = p2.getDistance(p3);
-  this.l2 = p3.getDistance(p1);
-  this.l3 = p1.getDistance(p2);
-  */
   //Refactoring
   this.points = [p1, p2, p3];
 
   this.lengths = this.points.map(function(item, index, array){
-      if(index === array.length ){
+      if(index === (array.length - 1) ){
         return item.getDistance(array[0]);
       }
       return item.getDistance(array[index+1])
     });
-
-
-
 }
 
 Triangle.prototype.getPerimeter = function() {
-  //return this.l1 + this.l2 + this.l3;
-
-  
   var perimiter = 0;
-  /*
-  for (l in this.lengths){
-    perimiter += l;
-  }
-  */
   this.lengths.forEach(function(item){
 	perimiter += item;
   });
@@ -117,24 +96,15 @@ Triangle.prototype.getPerimeter = function() {
 Triangle.prototype.getArea = function() {
   var p = this.getPerimeter() / 2;
   var area = 1;
-
-  for (l in lengths){
-    area *= (p-l);
-  }
+  this.lengths.forEach(function(item){
+	area *= (p-item);
+  });
   return sqrt(area*p);
-
-  //return sqrt(p*(p - this.l1)*(p - this.l2)*(p - this.l3));
 };
 
 
 Triangle.prototype.above = function (line){
-  /**
-  var result = 0;
-  for(point in this.points){
-    result += point.membership(line);
-  }
-  return result > 2
-  */
+
   return this.points.every(function(item) { 
     return (item.getDistance(line) > 0);
   });
@@ -142,22 +112,17 @@ Triangle.prototype.above = function (line){
 };
 
 Triangle.prototype.below = function (line){
-  /**
-  var result = 0;
 
-  for(point in this.points){
-    result += point.membership(line);
-  }
-
-  return result < -2;
-  */
-  return this.points.every(function(item,index,array){ return (item.getDistance(line) < 0);});
+  return this.points.every(function(item,index,array){ 
+	return (item.getDistance(line) < 0);
+  });
 
 };
 
 Triangle.prototype.intersect = function (line){
 
   return (!this.above(line)&&!this.below(line));
+
 };
 
 /* LINE */
