@@ -11,10 +11,6 @@ var Point = function (x, y) {
   this.y = y || 0;
 }
 
-Point.prototype.getDistance = function(point) {
-  return sqrt(pow(point.y - this.y, 2) + pow(point.x - this.y, 2));
-};
-
 Point.prototype.translate = function(dx, dy) {
   this.x += dx;
   this.y += dy;
@@ -55,6 +51,10 @@ Point.prototype.membership = function (eqFunction){
   return (piano > 0)? 1 : (piano <0)? -1: 0;
 };
 
+Point.prototype.getDistanceFromPoint = function(point) {
+  return sqrt(pow(point.y - this.y, 2) + pow(point.x - this.y, 2));
+};
+
 Point.prototype.getDistanceFromLine = function (line){
   return ((Math.abs(line.a*this.x + line.b*this.y + line.c))/(sqrt(pow(line.a,2) + pow(line.b,2))));
 }
@@ -89,9 +89,9 @@ var Triangle = function (p1, p2, p3) {
 
   this.lengths = this.points.map(function(item, index, array){
       if(index === array.length ){
-        return item.getDistanceFromPoint(array[0]);
+        return item.getDistance(array[0]);
       }
-      return item.getDistanceFromPoint(array[index+1])
+      return item.getDistance(array[index+1])
     });
 
 
@@ -100,10 +100,17 @@ var Triangle = function (p1, p2, p3) {
 
 Triangle.prototype.getPerimeter = function() {
   //return this.l1 + this.l2 + this.l3;
+
+  
   var perimiter = 0;
+  /*
   for (l in this.lengths){
     perimiter += l;
   }
+  */
+  this.lengths.forEach(function(item){
+	perimiter += item;
+  });
   return perimiter;
 };
 
@@ -149,15 +156,7 @@ Triangle.prototype.below = function (line){
 };
 
 Triangle.prototype.intersect = function (line){
-/**
-  var result = 0;
 
-  for(point in this.points){
-    result += point.membership(line);
-  }
-
-  return  (result < 3 && result > -3);
-*/
   return (!this.above(line)&&!this.below(line));
 };
 
