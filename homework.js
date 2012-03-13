@@ -7,6 +7,9 @@ var random = Math.random;
 /* POINT */
 
 var Point = function (x, y) {
+  if (!(this instanceof Point)){
+	return new Point(x, y);
+  }
   this.x = x || 0;
   this.y = y || 0;
 }
@@ -73,8 +76,11 @@ Point.prototype.getDistance = function (x){
 /* TRIANGLE */
 
 var Triangle = function (p1, p2, p3) {
+  
+if(!(this instanceof Triangle)){
+	return new Triangle(p1, p2, p3);
+  }
 
-  //Refactoring
   this.points = [p1, p2, p3];
 
   this.lengths = this.points.map(function(item, index, array){
@@ -82,7 +88,7 @@ var Triangle = function (p1, p2, p3) {
         return item.getDistance(array[0]);
       }
       return item.getDistance(array[index+1])
-    });
+  });
 }
 
 Triangle.prototype.getPerimeter = function() {
