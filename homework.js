@@ -12,7 +12,7 @@ var Point = function (x, y) {
   }
   this.x = x || 0;
   this.y = y || 0;
-}
+};
 
 Point.prototype.translate = function(dx, dy) {
   this.x += dx;
@@ -37,7 +37,7 @@ var randomPoints = function (n) {
   }
 
   return res;
-}
+};
 
 var points = randomPoints(100);
 
@@ -60,7 +60,7 @@ Point.prototype.getDistanceFromPoint = function(point) {
 
 Point.prototype.getDistanceFromLine = function (line){
   return ((Math.abs(line.a*this.x + line.b*this.y + line.c))/(sqrt(pow(line.a,2) + pow(line.b,2))));
-}
+};
 
 Point.prototype.getDistance = function (x){
   if ( x instanceof Point) {
@@ -89,7 +89,7 @@ if(!(this instanceof Triangle)){
       }
       return item.getDistance(array[index+1])
   });
-}
+};
 
 Triangle.prototype.getPerimeter = function() {
   var perimiter = 0;
@@ -144,4 +144,26 @@ var Line = function (a, b, c){
   this.c = c;
 };
 
+/* Quad */
 
+var Quad = function (p1, p2, p3, p4) {
+  
+if(!(this instanceof Quad)){
+  return new Quad(p1, p2, p3, p4);
+  }
+
+  this.points = [p1, p2, p3, p4];
+
+  this.lengths = this.points.map(function(item, index, array){
+      if(index === (array.length - 1) ){
+        return item.getDistance(array[0]);
+      }
+      return item.getDistance(array[index+1])
+  });
+};
+
+Quad.prototype.getPerimeter = Triangle.prototype.getPerimeter;
+Quad.prototype.getArea = Triangle.prototype.getArea;
+Quad.prototype.above = Triangle.prototype.above;
+Quad.prototype.below = Triangle.prototype.below;
+Quad.prototype.intersect = Triangle.prototype.intersect;
